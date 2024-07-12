@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Magazine</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pdfjs/web/viewer.css">
 </head>
 <body>
     <header>
@@ -13,12 +14,50 @@
     <main>
         <section>
             <h2>Read the Magazine</h2>
-            <embed src="pdf/magazine.pdf" type="application/pdf" width="100%" height="600px" />
+            <div id="pdf-viewer" class="pdfViewer singlePageView"></div>
             <p>If you can't see the magazine, <a href="pdf/magazine.pdf" download>download it here</a>.</p>
         </section>
     </main>
     <footer>
         <p>&copy; 2024 Online Magazine</p>
     </footer>
+
+    <script src="pdfjs/build/pdf.js"></script>
+    <script src="pdfjs/build/pdf.worker.js"></script>
+    <script src="pdfjs/web/viewer.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const url = 'pdf/magazine.pdf';
+
+            const loadingTask = pdfjsLib.getDocument(url);
+            loadingTask.promise.then(function(pdf) {
+                const viewer = document.getElementById('pdf-viewer');
+                viewer.innerHTML = '';
+
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(function(page) {
+                        const scale = 1.5;
+                        const viewport = page.getViewport({ scale: scale });
+
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+
+                        page.render(renderContext).promise.then(function() {
+                            viewer.appendChild(canvas);
+                        });
+                    });
+                }
+            }, function(reason) {
+                console.error(reason);
+            });
+        });
+    </script>
 </body>
 </html>
