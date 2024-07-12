@@ -59,6 +59,7 @@ canvas {
     margin-bottom: 1em;
 }
 
+/* Media queries for better mobile display */
 @media (max-width: 768px) {
     main {
         padding: 1em;

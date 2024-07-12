@@ -22,9 +22,10 @@
         <p>&copy; 2024 Online Magazine</p>
     </footer>
 
-    <script src="pdfjs/build/pdf.js"></script>
-    <script src="pdfjs/build/pdf.worker.js"></script>
-    <script src="pdfjs/web/viewer.js"></script>
+    <!-- PDF.js Library Files -->
+    <script src="pdfjs/build/pdf.mjs"></script>
+    <script src="pdfjs/build/pdf.worker.mjs"></script>
+    <script src="pdfjs/web/viewer.mjs"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const url = 'pdf/magazine.pdf';
@@ -36,7 +37,7 @@
 
                 for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                     pdf.getPage(pageNum).then(function(page) {
-                        const scale = 1.5;
+                        const scale = 1.5; // Adjust scale for better visibility
                         const viewport = page.getViewport({ scale: scale });
 
                         const canvas = document.createElement('canvas');
